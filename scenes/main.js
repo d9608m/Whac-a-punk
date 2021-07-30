@@ -1,209 +1,94 @@
+//Load Resources
+loadSound("score", "https://kaboomjs.com/assets/sounds/score.mp3")
+loadSound("ludwigvb", "https://kaboomjs.com/assets/sounds/ludwigvb.mp3")
+
+
+//Opening Sound
+play("ludwigvb");
+
+//Outline Layers
 layers([
 	"game",
   "items",
 	"ui",
 ], "game");
 
-const mpos = mousePos();
-
-render(() => {
-    drawSprite("hammer", {
-      pos: mousePos('game'),
-    });
-});
-
-add([
+//Set Background
+const background = add([
 	sprite("ground"),
-  layer("game"),
-	scale(6),
-]);
-
-add([
-	sprite("hole1"),
-  layer("ui"),
-	pos(20, 20),
-	scale(2),
+  scale(9),
 ]);
 
 
-add([
-	sprite("hole1"),
-  layer("ui"),
-	pos(60, 20),
-	scale(2),
-]);
-
-
-add([
-	sprite("hole1"),
-  layer("ui"),
-	pos(100, 20),
-	scale(2),
-]);
-
-
-add([
-	sprite("hole1"),
-  layer("ui"),
-	pos(40, 60),
-	scale(2),
-]);
-
-add([
-	sprite("hole1"),
-  layer("ui"),
-	pos(80, 60),
-	scale(2),
-]);
-
-
-add([
-	sprite("hole1"),
-  layer("ui"),
-	pos(60, 100),
-	scale(2),
-]);
-
-add([
-	sprite("wassie"),
-  layer("items"),
-	pos(60, 100),
-	scale(1.3),
-]);
-
-
-
-
-
-
-/*
-kaboom({
-	global: true,
-	fullscreen: true,
-	scale: 4,
-	clearColor: [0, 0, 0, 1],
+//Board Setup
+const board = addLevel([
+  "                        ",
+  "                        ",
+  "                        ",
+	"   @    @     @    @    ",
+	"   x    x     x    x    ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+	"     @     @     @      ",
+	"     x     x     x      ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+	"       @      @         ",
+	"       x      x         ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+  "                        ",
+	"           @            ",
+	"           x            ",
+], {
+  width: 15,
+	height: 7,
+  "x" : [
+    sprite("holeshape"), 
+    layer("items"), 
+    scale(2),
+    ],
+  "@" : [
+    sprite("punk"), 
+    layer("ui"), 
+    'punk',
+    scale(1.85),
+    ],  
 });
 
-loadRoot("/pub/examples/");
-loadSprite("steel", "img/steel.png");
-loadSprite("ch1", "img/ch1.png");
-loadSprite("ch2", "img/ch2.png");
-loadSprite("grass", "img/grass.png");
-loadSprite("door", "img/door.png");
-loadSprite("key", "img/key.png");
-loadSprite("guy", "img/guy.png");
 
-scene("main", (levelIdx) => {
 
-	const SPEED = 80;
 
-	const characters = {
-		"a": {
-			sprite: "ch1",
-			msg: "ohhi how are you",
-		},
-		"b": {
-			sprite: "ch2",
-			msg: "get out!",
-		},
-	};
+//Player Icon & Movements
+const player = add([
+	sprite("stone hammer"),
+  pos(board.getPos(0, 0)),
+  layer("ui"), 
+	scale(2),
+]);
 
-	const levels = [
-		[
-			"=======|==",
-			"=        =",
-			"= a      =",
-			"=        =",
-			"=        =",
-			"=    $   =",
-			"=        =",
-			"=        =",
-			"=   @    =",
-			"==========",
-		],
-		[
-			"==========",
-			"=        =",
-			"=  $     =",
-			"=        =",
-			"|        =",
-			"=        =",
-			"=      b =",
-			"=        =",
-			"=   @    =",
-			"==========",
-		],
-	];
+//Movement Speed
+const SPEED = 120;
 
-	addLevel(levels[levelIdx], {
-		width: 11,
-		height: 11,
-		pos: vec2(20, 20),
-		"=": [
-			sprite("steel"),
-			solid(),
-		],
-		"$": [
-			sprite("key"),
-			"key",
-		],
-		"@": [
-			sprite("guy"),
-			"player",
-		],
-		"|": [
-			sprite("door"),
-			solid(),
-			"door",
-		],
-		any(ch) {
-			const char = characters[ch];
-			if (char) {
-				return [
-					sprite(char.sprite),
-					solid(),
-					"character",
-					{
-						msg: char.msg,
-					},
-				];
-			}
-		},
-	});
-
-	const player = get("player")[0];
-
-	let hasKey = false;
-	let talking = null;
-
-	function talk(msg) {
-		talking = add([
-			text(msg),
-		]);
-	}
-
-	player.overlaps("key", (key) => {
-		destroy(key);
-		hasKey = true;
-	});
-
-	player.overlaps("door", () => {
-		if (hasKey) {
-			if (levelIdx + 1 < levels.length) {
-				go("main", levelIdx + 1);
-			} else {
-				go("win");
-			}
-		} else {
-			talk("you got no key!");
-		}
-	});
-
-	player.overlaps("character", (ch) => {
-		talk(ch.msg);
-	});
-
-	const dirs = {
+//Movement Direction
+const dirs = {
 		"left": vec2(-1, 0),
 		"right": vec2(1, 0),
 		"up": vec2(0, -1),
@@ -211,23 +96,67 @@ scene("main", (levelIdx) => {
 	};
 
 	for (const dir in dirs) {
-		keyPress(dir, () => {
-			if (talking) {
-				destroy(talking);
-				talking = null;
-			}
-		});
 		keyDown(dir, () => {
 			player.move(dirs[dir].scale(SPEED));
 		});
 	}
 
-	player.action(() => {
-		player.pushOutAll();
-	});
-
+//Keep Player Icon on Board
+player.action(() => {
+	if (player.pos.y >= 320) {
+		respawn();
+	}
 });
 
+
+//Punk Spawing @ random in holes
+//Drive Example https://kaboomjs.com/examples#drive
+const upBound = 40;
+const lowBound = height() - 12;
+
+loop(0.4, () => {
+	const obj = choose([
+		"punk",
+    "wassie",
+	]);
+	add([
+		sprite(obj),
+		"obj",
+		obj,
+		pos(width(), rand(lowBound, upBound)),
+    layer("ui")
+	]);
+});
+
+
+
+
+
+
+
+
+
+
+//If play overlaps punk destroy & add score
+player.overlaps('punk', (p) => {
+  destroy(p);
+  play("score");
+  score.value += 1;
+	score.text = score.value;
+  if (score.value == 10){
+    go ('win');
+  }
+});
+
+//Score
+const score = add([
+	text(0),
+	pos(12, 12),
+	layer("ui"),
+	{ value: 0, },
+]);
+
+//End Scene (Score = 10)
 scene("win", () => {
 	add([
 		text("you win!"),
@@ -236,37 +165,32 @@ scene("win", () => {
 	]);
 });
 
-go("main", 0);
+/*
+
+Snippets:
+
+const MOVE_SPEED = 500
+
+keyDown("right", () => {
+  player.move(MOVE_SPEED, 0)
+});
+
+keyDown("left", () => {
+  player.move(-MOVE_SPEED, 0)
+});
+
+keyDown("up", () => {
+  player.move(MOVE_SPEED, 0)
+});
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-addLevel([  // Add Objects
-  '  @  @ ', ' ',//Position
-  '  @  ',
-  '  @  ',
-  'xxxxx',
-], {
-  width: 40,
-  height: 40,
-  'x' : [sprite('ground'), solid()], //Show sprite / make solid
-  //dangerous tag
-  '@' : [sprite('enemy'), scale(0.5), 'dangerous']
-})
+const player = add([
+	render(() => {
+  drawSprite("hammer", {
+      pos: mousePos('game'),
+      scale: 2,
+    });
+  })
+]);
 
 */
-
-
-//drag
-//Redraw of Hammer
