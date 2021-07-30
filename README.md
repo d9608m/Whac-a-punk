@@ -1,2 +1,2 @@
-# Whac-a-punk
+# Whac-A-Punk
 Kaboom.js Game
