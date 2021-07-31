@@ -2,9 +2,198 @@
 loadSound("score", "https://kaboomjs.com/assets/sounds/score.mp3")
 loadSound("ludwigvb", "https://kaboomjs.com/assets/sounds/ludwigvb.mp3")
 
+loadSound("gameover", "https://kaboomjs.com/assets/sounds/gameover.mp3")
+
 
 //Opening Sound
 play("ludwigvb");
+
+
+layers([
+	"ground",
+	"game",
+	"ui",
+], "game");
+
+
+const upBound = 11;
+const lowBound = height() - 100;
+const speed = 110;
+let speedMod = 1;
+
+add([
+	sprite("ground"),
+	layer("ground"),
+  scale(5),
+]);
+
+
+//Player Icon & Movements
+const player = add([
+	sprite("sky"),
+  pos(24, height() / 2),  
+	scale(0.3),
+  area(vec2(-12, -6), vec2(12, 8)),
+]);
+
+//Movement Speed
+const pSPEED = 150;
+
+//Movement Direction
+const dirs = {
+		"left": vec2(-1, 0),
+		"right": vec2(1, 0),
+		"up": vec2(0, -1),
+		"down": vec2(0, 1),
+	};
+
+	for (const dir in dirs) {
+		keyDown(dir, () => {
+			player.move(dirs[dir].scale(pSPEED));
+		});
+	}
+
+
+//Adding the Items to each row
+//Trench 1
+const trench1 = 6;
+loop(1.5, () => {
+	const obj1 = choose([
+		"punk",
+		"wassie",
+	]);
+	add([
+		sprite(obj1),
+		"obj1",
+		obj1,
+		pos(width(), rand(trench1, trench1)),
+	]);
+});
+
+action("obj1", (o) => {
+	o.move(-speed * speedMod, 0);
+	if (o.pos.x <= -width()) {
+		destroy(o);
+	}
+});
+
+
+//Trench 2
+const trench2 = 46;
+loop(1.8, () => {
+	const obj2 = choose([
+		"punk2",
+		"wassie",
+	]);
+	add([
+		sprite(obj2),
+		"obj2",
+		obj2,
+		pos(width(), rand(trench2, trench2)),
+	]);
+});
+
+action("obj2", (o) => {
+	o.move(-speed * speedMod, 0);
+	if (o.pos.x <= -width()) {
+		destroy(o);
+	}
+});
+
+
+
+//Trench 3
+const trench3 = 86;
+loop(2, () => {
+	const obj3 = choose([
+		"punk3",
+		"wassie",
+	]);
+	add([
+		sprite(obj3),
+		"obj3",
+		obj3,
+		pos(width(), rand(trench3, trench3)),
+	]);
+});
+
+action("obj3", (o) => {
+	o.move(-speed * speedMod, 0);
+	if (o.pos.x <= -width()) {
+		destroy(o);
+	}
+});
+
+
+
+//Trench 4
+const trench4 = 126;
+loop(1.1, () => {
+	const obj4 = choose([
+		"punk",
+		"wassie",
+	]);
+	add([
+		sprite(obj4),
+		"obj4",
+		obj4,
+		pos(width(), rand(trench4, trench4)),
+	]);
+});
+
+action("obj4", (o) => {
+	o.move(-speed * speedMod, 0);
+	if (o.pos.x <= -width()) {
+		destroy(o);
+	}
+});
+
+
+
+// collisions or overlaps?
+player.overlaps("punk", (p) => {
+	destroy(p);
+  play("score");
+  score.value += 1;
+  score.text = score.value;
+});
+
+player.overlaps("wassie", (w) => {
+	destroy(player);
+  go ("win");
+});
+
+
+//Score
+const score = add([
+	text(0),
+	pos(5, 5),
+	layer("ui"),
+	{ value: 0, },
+]);
+
+//time
+const time = add([
+	text("1:00"),
+	pos(5, 185),
+	layer("ui"),
+	{ value: 0, },
+]);
+
+
+
+//End Scene (Score = 10)
+scene("win", () => {
+	add([
+		text("Gameover!"),
+     play("gameover"),
+		pos(width() / 2, height() / 2),
+		origin("center"),
+	]);
+});
+
+
+/*
 
 //Outline Layers
 layers([
@@ -164,6 +353,10 @@ scene("win", () => {
 		origin("center"),
 	]);
 });
+
+
+*/
+
 
 /*
 
