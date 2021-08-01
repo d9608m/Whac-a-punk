@@ -22,18 +22,17 @@ const speed = 110;
 let speedMod = 1;
 
 add([
-	sprite("ground"),
-	layer("ground"),
+	sprite("ground1"),
+	layer("ground1"),
   scale(5),
 ]);
 
 
 //Player Icon & Movements
 const player = add([
-	sprite("sky"),
-  pos(24, height() / 2),  
-	scale(0.3),
-  area(vec2(-12, -6), vec2(12, 8)),
+	sprite("player"),
+  pos(24,24),
+	scale(1.5),
 ]);
 
 //Movement Speed
@@ -78,6 +77,8 @@ action("obj1", (o) => {
 });
 
 
+
+
 //Trench 2
 const trench2 = 46;
 loop(1.8, () => {
@@ -104,7 +105,7 @@ action("obj2", (o) => {
 
 //Trench 3
 const trench3 = 86;
-loop(2, () => {
+loop(1.7, () => {
 	const obj3 = choose([
 		"punk3",
 		"wassie",
@@ -128,9 +129,9 @@ action("obj3", (o) => {
 
 //Trench 4
 const trench4 = 126;
-loop(1.1, () => {
+loop(1.4, () => {
 	const obj4 = choose([
-		"punk",
+		"punk4",
 		"wassie",
 	]);
 	add([
@@ -151,14 +152,36 @@ action("obj4", (o) => {
 
 
 // collisions or overlaps?
-player.overlaps("punk", (p) => {
+player.collides("punk", (p) => {
 	destroy(p);
   play("score");
   score.value += 1;
   score.text = score.value;
 });
 
-player.overlaps("wassie", (w) => {
+
+player.collides("punk2", (p2) => {
+	destroy(p2);
+  play("score");
+  score.value += 1;
+  score.text = score.value;
+});
+
+player.collides("punk3", (p3) => {
+	destroy(p3);
+  play("score");
+  score.value += 1;
+  score.text = score.value;
+});
+
+player.collides("punk4", (p4) => {
+	destroy(p4);
+  play("score");
+  score.value += 1;
+  score.text = score.value;
+});
+
+player.collides("wassie", (w) => {
 	destroy(player);
   go ("win");
 });
@@ -171,6 +194,9 @@ const score = add([
 	layer("ui"),
 	{ value: 0, },
 ]);
+
+ 
+//When score reaches X speed up 
 
 //time
 const time = add([
