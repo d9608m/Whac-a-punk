@@ -30,7 +30,7 @@ add([
 add([
   text("Press 'space' to start again!", 8),
   origin("center"),
-  pos(width() / 2, height() + 10),
+  pos(width() / 2, height() - 10),
   color(rgb(0.95, 0.5, 0.03)),
   layer("ui")
 ])

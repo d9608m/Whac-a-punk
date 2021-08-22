@@ -29,11 +29,11 @@ add([
 const bottom = add([
   sprite("ground1"),
   layer("background"),
-  pos(0,161),
+  pos(0,162),
 ])
 
 loop(0.5, () => {
-  bottom.frame = bottom.frame === 0 ? 1 : 0;
+  bottom.frame = bottom.frame === 1 ? 1 : 1;
 });
 
 
@@ -43,7 +43,7 @@ const player = add([
     frame: 0,
   }),
   layer("game"),
-  pos(20,165),
+  pos(100,165),
 	scale(1.5),
   player_tag
 ]);
@@ -55,7 +55,7 @@ loop(0.5, () => {
 
 
 //Player Movement Speed
-const pSPEED = 150;
+const pSPEED = 160;
 
 
 //Movement Direction
@@ -74,8 +74,8 @@ const dirs = {
 
 
 
-const upBound = width();
-const lowBound = height();
+const upBound = width() - 1;
+const lowBound = height() - 1;
 let speedMod = 1;
 let speed = 130;
 
@@ -179,8 +179,8 @@ action("obj4", (o) => {
 
 
 const scoreText = add([
-	text("Score 0", 8),
-  pos(150,165),
+	text("0", 8),
+  pos(185,2),
 	layer("ui"),
 ]);
 
@@ -188,14 +188,15 @@ const speedText = add([
 	text("Speed 0", 8),
   pos(0,0),
 	layer("background"),
+  color(0, 0, 0),
 ]);
 
 // collisions or overlaps?
 player.collides("punk", (p) => {
 	destroy(p);
   play("score");
-  score += 1;
-  speed += 10;
+  score += 5;
+  speed += 3;
   speedText.text = speed;
   scoreText.text = score;
   speedText.text = speed;
@@ -205,8 +206,8 @@ player.collides("punk", (p) => {
 player.collides("punk2", (p2) => {
 	destroy(p2);
   play("score");
-  score += 1;
-  speed += 10;
+  score += 3;
+  speed += 5;
   speedText.text = speed;
   scoreText.text = score;
 });
@@ -214,8 +215,8 @@ player.collides("punk2", (p2) => {
 player.collides("punk5", (p3) => {
 	destroy(p3);
   play("score");
-  score += 1;
-  speed += 10;
+  score += 2;
+  speed += 6;
   speedText.text = speed;
   scoreText.text = score;
 });
@@ -224,7 +225,7 @@ player.collides("punk3", (p4) => {
 	destroy(p4);
   play("score");
   score += 1;
-  speed += 10;
+  speed += 7;
   speedText.text = speed;
   scoreText.text = score;
 });
