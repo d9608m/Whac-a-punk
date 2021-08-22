@@ -1,2 +1,3 @@
-# Whac-A-Punk
-Kaboom.js Game being bulit on replit
+# Punk Collection 
+Move around collecting Punks & avoiding the Wassies!
+Game built on replit using Kaboom.js.
