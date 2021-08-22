@@ -142,7 +142,7 @@ const player = add([
     frame: 0,
   }),
   layer("game"),
-  pos(100,165),
+  pos(90,165),
 	scale(1.5),
   player_tag
 ]);
@@ -175,6 +175,28 @@ const dirs = {
 
 const upBound = width() - 1;
 const lowBound = height() - 1;
+
+
+function isOutOfBound() {
+  if ((player.pos.x < 0
+    || player.pos.x > width() - 10
+    || player.pos.y > height() + 10
+  )) { return true; }
+}
+
+function resetPos() {
+  player.pos.x = 90;
+  player.pos.y = height() - 20;
+}
+
+action(() => {
+  if (isOutOfBound()) {
+    resetPos();
+  }
+})
+
+
+
 let speedMod = 1;
 let speed = 130;
 
@@ -279,7 +301,7 @@ action("obj4", (o) => {
 
 const scoreText = add([
 	text("0", 8),
-  pos(185,2),
+  pos(183,2),
 	layer("ui"),
 ]);
 
