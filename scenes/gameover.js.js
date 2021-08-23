@@ -1,7 +1,7 @@
 const score = args || 0;
 
-const end = play("ludwigvb");
-end.volume(0.5);
+//End Sound
+const end = play("gameover");
 
 //Adding Background
 add([
@@ -15,23 +15,23 @@ add([
   text("Game Over", 12),
   origin("center"),
   pos(width() / 2, 35),
-  color(rgb(0.95, 0.5, 0.03)),
+  color(rgb(1, 0, 0, 1)),
   layer("ui")
 ])
 
 add([
-  text(score, 8),
+  text("Score: " + score, 8),
   origin("center"),
-  pos(width() / 2 + 10, height() / 2 + 10),
-  color(rgb(0.95, 0.5, 0.03)),
+  pos(width() / 2 + 5, height() / 2 + 10),
+  color(rgb(1, 0, 0, 1)),
   layer("ui")
 ])
 
 add([
-  text("Press 'space' to start again!", 8),
+  text("Press 'space' to start again!", 5),
   origin("center"),
   pos(width() / 2, height() - 10),
-  color(rgb(0.95, 0.5, 0.03)),
+  color(rgb(1, 0, 0, 1)),
   layer("ui")
 ])
 

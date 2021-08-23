@@ -45,14 +45,15 @@ loadKbmsprite("punk5", "sprites/punk5.kbmsprite");
 loadKbmsprite("punk6", "sprites/punk6.kbmsprite");
 loadKbmsprite("punk7", "sprites/punk7.kbmsprite");
 loadKbmsprite("wassie", "sprites/wassie.kbmsprite");
-loadSound("ludwigvb", "sounds/ludwigvb.mp3");
+loadSound("gameover", "sounds/gameover.mp3");
 loadSound("music", "sounds/music.mp3");
 loadSound("score", "sounds/score.mp3");
+loadSound("stab2", "sounds/stab2.mp3");
 scene("gameover", (args = {}) => {
 const score = args || 0;
 
-const end = play("ludwigvb");
-end.volume(0.5);
+//End Sound
+const end = play("gameover");
 
 //Adding Background
 add([
@@ -66,23 +67,23 @@ add([
   text("Game Over", 12),
   origin("center"),
   pos(width() / 2, 35),
-  color(rgb(0.95, 0.5, 0.03)),
+  color(rgb(1, 0, 0, 1)),
   layer("ui")
 ])
 
 add([
-  text(score, 8),
+  text("Score: " + score, 8),
   origin("center"),
-  pos(width() / 2 + 10, height() / 2 + 10),
-  color(rgb(0.95, 0.5, 0.03)),
+  pos(width() / 2 + 5, height() / 2 + 10),
+  color(rgb(1, 0, 0, 1)),
   layer("ui")
 ])
 
 add([
-  text("Press 'space' to start again!", 8),
+  text("Press 'space' to start again!", 5),
   origin("center"),
   pos(width() / 2, height() - 10),
-  color(rgb(0.95, 0.5, 0.03)),
+  color(rgb(1, 0, 0, 1)),
   layer("ui")
 ])
 
@@ -98,14 +99,11 @@ keyPress("space", () => {
 });
 scene("main", (args = {}) => {
 
-//Tag and const
+//Tags
 const player_tag = "player";
-const punk_tag ="punks";
-const obstacle_tag = "obstacle";
 
 
-let score = 0;
-
+//Background Music
 const bgMusic = play("music");
 bgMusic.volume(0.5);
 
@@ -124,13 +122,13 @@ add([
   layer("background")
 ])
 
-//Bottom
+//Bottom - Safe Area
 const bottom = add([
   sprite("ground1"),
   layer("background"),
   pos(0,162),
 ])
-
+//Flash
 loop(0.5, () => {
   bottom.frame = bottom.frame === 1 ? 1 : 1;
 });
@@ -172,15 +170,18 @@ const dirs = {
 	}
 
 
-
+//Player out of bounds = reset in box
+//Issue with Top Border??
 const upBound = width() - 1;
 const lowBound = height() - 1;
 
-
+//player.pos.x < 0
+ //   || 
 function isOutOfBound() {
   if ((player.pos.x < 0
     || player.pos.x > width() - 10
-    || player.pos.y > height() + 10
+    || player.pos.y > height() - 10
+    || player.pos.y < 0
   )) { return true; }
 }
 
@@ -196,12 +197,9 @@ action(() => {
 })
 
 
-
+//Game Items Movement Speed - Starting Values
 let speedMod = 1;
 let speed = 130;
-
-
-//const speed if score >10 speed = 
 
 //Adding Game Items (Punk or Wassie) for each of the rows - Item Added, Position, Speed
 //Trench 1
@@ -298,6 +296,8 @@ action("obj4", (o) => {
 });
 
 
+//Score
+let score = 0;
 
 const scoreText = add([
 	text("0", 8),
@@ -305,6 +305,7 @@ const scoreText = add([
 	layer("ui"),
 ]);
 
+//Game Speed
 const speedText = add([
 	text("Speed 0", 8),
   pos(0,0),
@@ -312,15 +313,14 @@ const speedText = add([
   color(0, 0, 0),
 ]);
 
-// collisions or overlaps?
+//Player collisions with game items
 player.collides("punk", (p) => {
 	destroy(p);
   play("score");
-  score += 5;
-  speed += 3;
+  score += 5; //Increase Score
+  speed += 3; //Increase Speed
   speedText.text = speed;
   scoreText.text = score;
-  speedText.text = speed;
 });
 
 
@@ -354,6 +354,7 @@ player.collides("punk3", (p4) => {
 player.collides("wassie", (w) => {
 	destroy(player);
   bgMusic.stop();
+  play("stab2");
   go("gameover", score);
 });
 });

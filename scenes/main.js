@@ -1,12 +1,9 @@
 
-//Tag and const
+//Tags
 const player_tag = "player";
-const punk_tag ="punks";
-const obstacle_tag = "obstacle";
 
 
-let score = 0;
-
+//Background Music
 const bgMusic = play("music");
 bgMusic.volume(0.5);
 
@@ -25,13 +22,13 @@ add([
   layer("background")
 ])
 
-//Bottom
+//Bottom - Safe Area
 const bottom = add([
   sprite("ground1"),
   layer("background"),
   pos(0,162),
 ])
-
+//Flash
 loop(0.5, () => {
   bottom.frame = bottom.frame === 1 ? 1 : 1;
 });
@@ -73,15 +70,17 @@ const dirs = {
 	}
 
 
-
+//Player out of bounds = reset in box
 const upBound = width() - 1;
 const lowBound = height() - 1;
 
-
+//player.pos.x < 0
+ //   || 
 function isOutOfBound() {
   if ((player.pos.x < 0
     || player.pos.x > width() - 10
     || player.pos.y > height() - 10
+    || player.pos.y < 0
   )) { return true; }
 }
 
@@ -97,12 +96,9 @@ action(() => {
 })
 
 
-
+//Game Items Movement Speed - Starting Values
 let speedMod = 1;
 let speed = 130;
-
-
-//const speed if score >10 speed = 
 
 //Adding Game Items (Punk or Wassie) for each of the rows - Item Added, Position, Speed
 //Trench 1
@@ -199,6 +195,8 @@ action("obj4", (o) => {
 });
 
 
+//Score
+let score = 0;
 
 const scoreText = add([
 	text("0", 8),
@@ -206,6 +204,7 @@ const scoreText = add([
 	layer("ui"),
 ]);
 
+//Game Speed
 const speedText = add([
 	text("Speed 0", 8),
   pos(0,0),
@@ -213,15 +212,14 @@ const speedText = add([
   color(0, 0, 0),
 ]);
 
-// collisions or overlaps?
+//Player collisions with game items
 player.collides("punk", (p) => {
 	destroy(p);
   play("score");
-  score += 5;
-  speed += 3;
+  score += 5; //Increase Score
+  speed += 3; //Increase Speed
   speedText.text = speed;
   scoreText.text = score;
-  speedText.text = speed;
 });
 
 
@@ -255,5 +253,6 @@ player.collides("punk3", (p4) => {
 player.collides("wassie", (w) => {
 	destroy(player);
   bgMusic.stop();
+  play("stab2");
   go("gameover", score);
 });
